@@ -1,0 +1,89 @@
+/* List Builder CSS */
+
+* {
+  box-sizing: border-box;
+}
+
+/* body { 
+  margin: 0;
+  background-color: #eee;
+} */
+
+.jumbotron { 
+  padding: 30px; /* fills out the jumbotron */
+  background-color: rgb(35, 64, 109);
+}
+
+.container {
+  width: 1170px; /* specify a width */
+  margin: 0 auto;  /* centers the container */
+  padding: 0 15px; /* adds some padding to the left and right*/
+}
+
+.jumbotron .container { 
+  max-width: 100%; /* allows the jumbotron to adjust on smaller widths */
+}
+
+.jumbotron h1 { 
+  text-align: center; /* centers the heading */
+  color: #DDD;
+  font-family: 'Raleway', Helvetica, Arial, sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.hidden {
+  display: none;
+}
+
+.tableBorder {
+  border: 1px solid black;
+  border-collapse: collapse;
+  padding: 3px;
+  vertical-align: top;
+}
+
+/* Keep the footer in place */
+.footer
+{
+    text-align: center;
+    position: fixed;
+    bottom: 0px;
+    width:100%;
+    padding: 10px;
+    background-color: rgb(35, 64, 109);
+    font-size: 12px;
+    color:rgb(255, 255, 255);
+}
+
+
+.flex-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+
+.flexboxRow {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/* Create four equal entries in myflexbox */
+.flexboxColumn {
+  flex: 10%;
+  padding: 10px;
+}
+
+/* Media query - on screens that are 992px wide or less, go from four columns to two columns */
+@media screen and (max-width: 992px) {
+  .flexboxColumn {
+    flex: 50%;
+  }
+}
+
+/* Media query - on screens that are 600px wide or less, make the columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+  .flexboxRow {
+    flex-direction: column;
+  }
+}

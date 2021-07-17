@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Country Information</title>
+  <meta name="description" content="Country Information">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script defer src="./scripts/countryInformation.js"></script>
+  <link rel="stylesheet" href="./css/countryInformation.css">
+</head>
+
+<body>
+
+  <div class="jumbotron">
+    <div class="container">
+      <h1>Country Information</h1>
+    </div>
+  </div>
+
+  <div class="flex-container">
+
+    <div class="flexboxColumn">
+      <h3>Region List</h3>
+      <select id="regionList" onchange="getCountries()">
+        <option value="none" selected disabled hidden>Select A Region</option>
+      </select><br>
+
+      <div id="countryView">
+        <h3>Country List</h3>
+        <select id="countryList" onchange="getCountryInfo()">
+          <option value="none" selected disabled hidden>Select A Country</option>
+        </select><br>
+      </div>
+    </div>
+
+
+    <div class="flexboxColumn">
+      <h3>The Country Information</h3>
+      <div id="countryInfo">
+      </div>
+    </div>
+
+    <!-- <div class="flexboxColumn">
+      <h3>Extra Column</h3>
+    </div> -->
+
+  </div>
+
+  <div class="footer">
+    <p><b>Copyright &copy; 2021 Me</b></p>
+  </div>
+
+</body>
+
+</html>
