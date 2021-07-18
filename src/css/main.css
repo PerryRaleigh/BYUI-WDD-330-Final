@@ -63,6 +63,12 @@
   flex-wrap: row wrap;
 }
 
+.flex-container-vert {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+}
+
 .flex-container > div {
   flex: 1 100%;
   margin: 5px;
@@ -73,17 +79,17 @@
 
 .flexboxColumn-5 {
   flex: 5%;
-  padding: 5px;
+  padding: 3px;
 }
 
 .flexboxColumn-10 {
   flex: 10%;
-  padding: 5px;
+  padding: 3px;
 }
 
 .flexboxColumn {
   flex: 10%;
-  padding: 5px;
+  padding: 3px;
 }
 
 /* Media query - on screens that are 992px wide or less, go from four columns to two columns */

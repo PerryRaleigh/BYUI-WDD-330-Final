@@ -17,14 +17,11 @@ const regions = [
 
 function init() {
   let visitDate = document.getElementById("visitDate");
-  let countryView = document.getElementById("countryView");
-  let countrySelect = document.getElementById("countrySelect");
   let today = new Date();
 
-  countrySelect.style.display = "none";
-  countryView.style.display = "none";
   visitDate.value = today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2);
   buildRegionList();
+  geoFind();
 }
 
 async function getCountries() {
@@ -104,6 +101,38 @@ let buildRegionList = function () {
     newOpt.value = regions[i].code;
     sel.appendChild(newOpt);
   }
+}
+
+function geoFind() {
+
+  const apiKey = 'AIzaSyApewl-x5kAspgxi-ftOf7_rnZYnjd1Vso';
+  const status = document.querySelector('#status');
+  const mapLink = document.querySelector('#map-link');
+  const mapFrame = document.querySelector('#mapFrame');
+
+  mapLink.href = '';
+  mapLink.textContent = '';
+
+  function success(position) {
+    const latitude  = position.coords.latitude;
+    const longitude = position.coords.longitude;
+
+    status.textContent = '';
+    mapFrame.src = 
+        `https://www.google.com/maps/embed/v1/view?key=${apiKey}&center=${latitude},${longitude}&zoom=13`;
+  }
+
+  function error() {
+    status.textContent = 'Unable to retrieve your location';
+  }
+
+  if(!navigator.geolocation) {
+    status.textContent = 'Geolocation is not supported by your browser';
+  } else {
+    status.textContent = 'Locating…';
+    navigator.geolocation.getCurrentPosition(success, error);
+  }
+
 }
 
 init();

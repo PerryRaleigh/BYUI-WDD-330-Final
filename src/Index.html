@@ -17,7 +17,7 @@
     <div class="container">
       <h1>Discover Country Information</h1>
     </div>
-    <div class="flex-container">
+    <div class="flex-container-vert">
       <div class="flexboxColumn-5">
         <span class="text-label">Date of Visit: </span>
         <input type="date" id="visitDate">
@@ -46,6 +46,24 @@
     <div id="countryView" class="flexboxColumn">
       <h3>The Country Information</h3>
       <div id="countryInfo">
+      </div>
+    </div>
+
+    <div class="flexboxColumn">
+      <div>
+        <p id="status"></p>
+        <a id="map-link" target="_blank"></a>
+        <p>
+          <iframe id="mapFrame" width="500" height="335" style="border:0" loading="lazy" allowfullscreen
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d83998.75769506606!2d2.277020441486908!3d48.858950680702144!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e66e1f06e2b70f%3A0x40b82c3688c9460!2sParis%2C%20France!5e0!3m2!1sen!2sus!4v1625806277166!5m2!1sen!2sus">
+          </iframe>
+        </p>
+      </div>
+    </div>
+
+    <div class="flexboxColumn">
+      <h3>The Weather Forecast</h3>
+      <div id="countryWeather">
       </div>
     </div>
   </div>
