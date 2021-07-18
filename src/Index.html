@@ -1,16 +1,63 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Discover Country Information</title>
-    <meta name="description" content="Discover country information">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="./css/main.css">
-  </head>
-  <body>
-    
-    
-    <script src="./scripts/main.js" async defer></script>
-  </body>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Discover Country Information</title>
+  <meta name="description" content="Information about countries">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script defer src="./scripts/main.js"></script>
+  <link rel="stylesheet" href="./css/main.css">
+</head>
+
+<body>
+
+  <div class="jumbotron">
+    <div class="container">
+      <h1>Discover Country Information</h1>
+    </div>
+    <div class="flex-container">
+      <div class="flexboxColumn-5">
+        <span class="text-label">Date of Visit: </span>
+        <input type="date" id="visitDate">
+      </div>
+      <div class="flexboxColumn-5">
+        <span class="text-label">Region Selection: </span>
+        <select id="regionList" onchange="getCountries()">
+          <option value="none" selected disabled hidden>Select A Region</option>
+        </select>
+      </div>
+      <div class="flexboxColumn-5">
+        <span id="countrySelect" class="text-label">Country Selection:
+          <select id="countryList" onchange="getCountryInfo()">
+            <option value="none" selected disabled hidden>Select A Country</option>
+          </select>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex-container">
+    <div class="flexboxColumn">
+      <h3>Stored Countries</h3>
+    </div>
+
+    <div id="countryView" class="flexboxColumn">
+      <h3>The Country Information</h3>
+      <div id="countryInfo">
+      </div>
+    </div>
+  </div>
+
+  <div class="flex-container">
+    <div class="flexboxColumn">
+      <div class="footer">
+        <p><b>Copyright &copy; 2021 Perry E Raleigh</b></p>
+      </div>
+    </div>
+  </div>
+
+</body>
+
 </html>
