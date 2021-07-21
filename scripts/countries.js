@@ -14,6 +14,11 @@ const regions = [
   { region: "North American Free Trade Agreement", code: "nafta" },
   { region: "South Asian Association for Regional Cooperation", code: "saarc" }
 ]
+var currentLat = 0;
+var currentLon = 0;
+var countryLat = 0;
+var countryLon = 0;
+const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
 function init() {
   let visitDate = document.getElementById("visitDate");
@@ -39,9 +44,8 @@ async function getCountries() {
   }
 
   // retrieve the JSON data
-  const response = await fetch(apiString);
-  const jsonData = await response.json();
-  console.table(jsonData);
+  var response = await fetch(apiString);
+  var jsonData = await response.json();
 
   if (jsonData.status === 404) {
     document.getElementById("countryInfo").innerHTML = "Region " + regionSel.innerHTML.toString + " is " + jsonData.message;
@@ -69,8 +73,8 @@ async function getCountryInfo() {
   document.getElementById("countryInfo").innerHTML = "";
 
   // retrieve the JSON data
-  const response = await fetch(apiString);
-  const jsonData = await response.json();
+  var response = await fetch(apiString);
+  var jsonData = await response.json();
 
   if (jsonData.status === 404) {
     document.getElementById("countryParagraph").innerHTML = "Region " + regionSel.value + " is " + jsonData.message;
@@ -85,6 +89,8 @@ async function getCountryInfo() {
     countryInfo.innerHTML += "<p> Region: " + jsonData.region + "</p>";
     countryInfo.innerHTML += "<p> Sub-Region: " + jsonData.subregion + "</p>";
     countryInfo.innerHTML += "<p> Flag: <img src=" + jsonData.flag + " width=\"100\" height=\"50\"></p>";
+
+    getWeatherForcast(jsonData.capital, jsonData.name);
   }
 }
 
@@ -100,24 +106,30 @@ let buildRegionList = function () {
 }
 
 function geoFind(cityIn, countryIn) {
-  const apiKey = 'AIzaSyApewl-x5kAspgxi-ftOf7_rnZYnjd1Vso';
+  const googleApiKey = 'AIzaSyApewl-x5kAspgxi-ftOf7_rnZYnjd1Vso';
   const status = document.querySelector('#status');
   const mapLink = document.querySelector('#map-link');
   const mapFrame = document.querySelector('#mapFrame');
-  const city = cityIn;
-  const country = countryIn;
+  const googlUrlBase = 'https://www.google.com/maps/embed/v1/place?key=';
+  const weatherGeoUrlBase = 'http://api.openweathermap.org/geo/1.0/reverse';
 
   mapLink.href = '';
   mapLink.textContent = '';
 
-  function success(position) {
-    const curLatitude = position.coords.latitude;
-    const curLongitude = position.coords.longitude;
+  async function success(position) {
+    currentLat = position.coords.latitude;
+    currentLon = position.coords.longitude;
+    const apiString = `${weatherGeoUrlBase}?lat=${currentLat}&lon=${currentLon}&appid=b65c2520dadd5ae6207572b5ee022f38`
+
+    // retrieve the JSON data
+    var response = await fetch(apiString);
+    var jsonData = await response.json();
 
     status.textContent = '';
     mapFrame.src =
-    `https://www.google.com/maps/embed/v1/view?key=${apiKey}&center=${curLatitude},${curLongitude}&zoom=11`;
-  }
+      `${googlUrlBase}${googleApiKey}&q=${jsonData[0].name}+${jsonData[0].country}&zoom=9`;
+      getWeatherForcast(jsonData[0].name, jsonData[0].country);
+    }
 
   function error() {
     status.textContent = 'Unable to retrieve your location';
@@ -133,9 +145,64 @@ function geoFind(cityIn, countryIn) {
     }
   } else {
     status.textContent = '';
-    mapFrame.src = 
-    `https://www.google.com/maps/embed/v1/place?key=${apiKey}&q=${cityIn}+${countryIn}&zoom=9`;
+    mapFrame.src =
+      `${googlUrlBase}${googleApiKey}&q=${cityIn}+${countryIn}&zoom=9`;
   }
+}
+
+async function getWeatherForcast(cityIn, countryIn) {
+  let newRow = '';
+  const forcastTable = document.getElementById("forcastTable");
+  let listBody = document.getElementById("forcastTableBody");
+  const appId = 'b65c2520dadd5ae6207572b5ee022f38';
+  const weatherGeoUrlBase = 'http://api.openweathermap.org/geo/1.0/direct';
+  const weatherUrlBase = 'https://api.openweathermap.org/data/2.5/onecall';
+  const weatherView = document.getElementById("forcastParagraph");
+
+  forcastTable.style.visibility = "hidden";
+
+  // Delete the rows from prior repos, if any
+  for (var i = listBody.rows.length; i > 0; i--) {
+    listBody.deleteRow(i - 1);
+  }
+
+  var apiString = `${weatherGeoUrlBase}?q=${cityIn},${countryIn}&appid=${appId}&units=imperial`
+  // retrieve the lattitude and longitude of the city
+  var response = await fetch(apiString);
+  var jsonData = await response.json();
+  countryLat = jsonData[0].lat;
+  countryLon = jsonData[0].lon;
+
+  apiString = `${weatherUrlBase}?lat=${countryLat}&lon=${countryLon}&appid=${appId}&units=imperial`
+  // retrieve the weather forcast
+  response = await fetch(apiString);
+  jsonData = await response.json();
+
+  console.table(jsonData.daily);
+
+  jsonData.daily.forEach(day => {
+    const d = new Date(day.dt * 1000);
+    const monthDay = d.getDate();
+    const month = months[d.getMonth()];
+    const year = d.getFullYear();
+    const fullDate = `${month} ${monthDay}, ${year}`
+
+    console.log(day.dt);
+    console.log(fullDate);
+
+    newRow = listBody.insertRow(listBody.rows.length);
+    newCell1 = newRow.insertCell(0);
+    newCell2 = newRow.insertCell(1);
+    newCell3 = newRow.insertCell(2);
+    newCell1.className = "tableBorder";
+    newCell2.className = "tableBorder";
+    newCell3.className = "tableBorder";
+    newCell1.innerHTML = fullDate;
+    newCell2.innerHTML = day.weather[0].description;
+    newCell3.innerHTML = day.temp.day;
+  });
+
+  forcastTable.style.visibility = "visible";
 }
 
 init();

@@ -7,7 +7,7 @@
   <title>Discover Country Information</title>
   <meta name="description" content="Information about countries">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script defer src="./scripts/main.js"></script>
+  <script defer src="./scripts/countries.js"></script>
   <link rel="stylesheet" href="./css/main.css">
 </head>
 
@@ -63,8 +63,19 @@
 
     <div class="flexboxColumn">
       <h3>The Weather Forecast</h3>
-      <div id="countryWeather">
-      </div>
+      <p id="forcastParagraph">
+      <table id="forcastTable" class="tableBorder" style="width:100%">
+        <thead>
+          <tr>
+            <th class="tableBorder">Day</th>
+            <th class="tableBorder">Forcast</th>
+            <th class="tableBorder">Temp</th>
+          </tr>
+        </thead>
+        <tbody id="forcastTableBody">
+        </tbody>
+      </table>
+      </p></br></br>
     </div>
   </div>
 
