@@ -31,7 +31,6 @@
       <div class="flexboxColumn-5">
         <span id="countrySelect" class="text-label">Country Selection:
           <select id="countryList" onchange="getCountryInfo()">
-            <option value="none" selected disabled hidden>Select A Country</option>
           </select>
         </span>
       </div>
@@ -41,22 +40,52 @@
   <div class="flex-container">
     <div class="flexboxColumn">
       <h3>Stored Countries</h3>
+      <div class="api-info" id="storedCountries">
+        <p><h4>Country - Visit Date</h4></p>
+      </div>
     </div>
 
     <div id="countryView" class="flexboxColumn">
       <h3>The Country Information</h3>
-      <div id="countryInfo">
-      </div>
+      <input id="saveCountry" type="button" onclick="saveCountry()" value="Save This Country" disabled>
+      <table id="infoTable">
+        <tr>
+          <td>Flag:</td>
+          <td>?</td>
+        </tr>
+        <tr>
+          <td>Name:</td>
+          <td>?</td>
+        </tr>
+        <tr>
+          <td>Capital:</td>
+          <td>?</td>
+        </tr>
+        <tr>
+          <td>Region:</td>
+          <td>?</td>
+        </tr>
+        <tr>
+          <td>Sub-Region:</td>
+          <td>?</td>
+        </tr>
+        <tr>
+          <td>Currency:</td>
+          <td>?</td>
+        </tr>
+      </table>
     </div>
 
     <div class="flexboxColumn">
       <div>
         <p id="status"></p>
         <a id="map-link" target="_blank"></a>
-        <p>
-          <iframe id="mapFrame" width="500" height="335" style="border:0" loading="lazy" allowfullscreen
+        <p><br>
+        <div>
+          <iframe id="mapFrame" width="500" height="335" style="border-radius: 10px" loading="lazy" allowfullscreen
             src="https://www.google.com/maps/embed/v1/place?key=AIzaSyApewl-x5kAspgxi-ftOf7_rnZYnjd1Vso&q=Paris+France&zoom=9">
           </iframe>
+        </div>
         </p>
       </div>
     </div>
@@ -64,7 +93,7 @@
     <div class="flexboxColumn">
       <h3>The Weather Forecast</h3>
       <p id="forcastParagraph">
-      <table id="forcastTable" class="tableBorder" style="width:100%">
+      <table id="forcastTable" class="tableBorder api-info" style="width:100%">
         <thead>
           <tr>
             <th class="tableBorder">Day</th>

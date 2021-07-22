@@ -1,4 +1,3 @@
-
 const regions = [
   { region: "European Union", code: "eu" },
   { region: "European Free Trade Association", code: "efta" },
@@ -18,6 +17,7 @@ var currentLat = 0;
 var currentLon = 0;
 var countryLat = 0;
 var countryLon = 0;
+var countrySaved = '';
 const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
 function init() {
@@ -36,7 +36,6 @@ async function getCountries() {
   let apiString = "https://restcountries.eu/rest/v2/regionalbloc/" + regionSel.value + "?fields=name;alpha2Code";
 
   countrySelect.style.display = "block";
-  document.getElementById("countryInfo").innerHTML = "";
 
   // Delete the countries from prior region, if any
   for (let i = countrySel.length; i > 1; i--) {
@@ -44,8 +43,8 @@ async function getCountries() {
   }
 
   // retrieve the JSON data
-  var response = await fetch(apiString);
-  var jsonData = await response.json();
+  response = await fetch(apiString);
+  jsonData = await response.json();
 
   if (jsonData.status === 404) {
     document.getElementById("countryInfo").innerHTML = "Region " + regionSel.innerHTML.toString + " is " + jsonData.message;
@@ -53,9 +52,16 @@ async function getCountries() {
     document.getElementById("countryInfo").style.fontSize = "larger";
   } else {
     let countries = jsonData.length;
+    let newOpt = document.createElement('option');
+
+    newOpt.innerHTML = 'Select A Country';
+    newOpt.value = 'none';
+    newOpt.selected = true;
+    newOpt.disabled = true;
+    countrySel.appendChild(newOpt);
 
     for (let index = 0; index < countries; index++) {
-      let newOpt = document.createElement('option');
+      newOpt = document.createElement('option');
       newOpt.innerHTML = jsonData[index].name;
       newOpt.value = jsonData[index].alpha2Code;
       countrySel.appendChild(newOpt);
@@ -69,26 +75,29 @@ async function getCountryInfo() {
   let apiString = "https://restcountries.eu/rest/v2/alpha/" + countrySel.value;
   let countryView = document.getElementById("countryView");
   countryView.style.display = "block";
-
-  document.getElementById("countryInfo").innerHTML = "";
+  document.getElementById("saveCountry").disabled = false;
 
   // retrieve the JSON data
   var response = await fetch(apiString);
   var jsonData = await response.json();
+
+  console.table(jsonData);
 
   if (jsonData.status === 404) {
     document.getElementById("countryParagraph").innerHTML = "Region " + regionSel.value + " is " + jsonData.message;
     document.getElementById("countryParagraph").style.color = "red";
     document.getElementById("countryParagraph").style.fontSize = "larger";
   } else {
-    let countryInfo = document.getElementById("countryInfo");
+    let infoTable = document.getElementById("infoTable");
 
+    countrySaved = jsonData.name;
     geoFind(jsonData.capital, jsonData.name);
-    countryInfo.innerHTML = "<p> Name: " + jsonData.name + "</p>";
-    countryInfo.innerHTML += "<p> Capital: " + jsonData.capital + "</p>";
-    countryInfo.innerHTML += "<p> Region: " + jsonData.region + "</p>";
-    countryInfo.innerHTML += "<p> Sub-Region: " + jsonData.subregion + "</p>";
-    countryInfo.innerHTML += "<p> Flag: <img src=" + jsonData.flag + " width=\"100\" height=\"50\"></p>";
+    document.getElementById("infoTable").rows[0].cells[1].innerHTML = `<img class="image-border" src=${jsonData.flag} width=100 height=50>`;
+    document.getElementById("infoTable").rows[1].cells[1].innerHTML = jsonData.name;
+    document.getElementById("infoTable").rows[2].cells[1].innerHTML = jsonData.capital;
+    document.getElementById("infoTable").rows[3].cells[1].innerHTML = jsonData.region;
+    document.getElementById("infoTable").rows[4].cells[1].innerHTML = jsonData.subregion;
+    document.getElementById("infoTable").rows[5].cells[1].innerHTML = jsonData.currencies[0].name;
 
     getWeatherForcast(jsonData.capital, jsonData.name);
   }
@@ -111,7 +120,7 @@ function geoFind(cityIn, countryIn) {
   const mapLink = document.querySelector('#map-link');
   const mapFrame = document.querySelector('#mapFrame');
   const googlUrlBase = 'https://www.google.com/maps/embed/v1/place?key=';
-  const weatherGeoUrlBase = 'http://api.openweathermap.org/geo/1.0/reverse';
+  const weatherGeoUrlBase = 'https://api.openweathermap.org/geo/1.0/reverse';
 
   mapLink.href = '';
   mapLink.textContent = '';
@@ -155,7 +164,7 @@ async function getWeatherForcast(cityIn, countryIn) {
   const forcastTable = document.getElementById("forcastTable");
   let listBody = document.getElementById("forcastTableBody");
   const appId = 'b65c2520dadd5ae6207572b5ee022f38';
-  const weatherGeoUrlBase = 'http://api.openweathermap.org/geo/1.0/direct';
+  const weatherGeoUrlBase = 'https://api.openweathermap.org/geo/1.0/direct';
   const weatherUrlBase = 'https://api.openweathermap.org/data/2.5/onecall';
   const weatherView = document.getElementById("forcastParagraph");
 
@@ -172,13 +181,11 @@ async function getWeatherForcast(cityIn, countryIn) {
   var jsonData = await response.json();
   countryLat = jsonData[0].lat;
   countryLon = jsonData[0].lon;
-
   apiString = `${weatherUrlBase}?lat=${countryLat}&lon=${countryLon}&appid=${appId}&units=imperial`
+
   // retrieve the weather forcast
   response = await fetch(apiString);
   jsonData = await response.json();
-
-  console.table(jsonData.daily);
 
   jsonData.daily.forEach(day => {
     const d = new Date(day.dt * 1000);
@@ -186,9 +193,6 @@ async function getWeatherForcast(cityIn, countryIn) {
     const month = months[d.getMonth()];
     const year = d.getFullYear();
     const fullDate = `${month} ${monthDay}, ${year}`
-
-    console.log(day.dt);
-    console.log(fullDate);
 
     newRow = listBody.insertRow(listBody.rows.length);
     newCell1 = newRow.insertCell(0);
@@ -203,6 +207,12 @@ async function getWeatherForcast(cityIn, countryIn) {
   });
 
   forcastTable.style.visibility = "visible";
+}
+
+function saveCountry() {
+  let visitDate = document.getElementById("visitDate").value;
+  let storedCountries = document.getElementById("storedCountries");
+  storedCountries.innerHTML += `<p>${countrySaved} - ${visitDate}</p>`;
 }
 
 init();
