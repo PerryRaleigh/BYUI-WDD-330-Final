@@ -38,7 +38,7 @@ async function getCountries() {
   countrySelect.style.display = "block";
 
   // Delete the countries from prior region, if any
-  for (let i = countrySel.length; i > 1; i--) {
+  for (let i = countrySel.length; i > 0; i--) {
     countrySel.remove(i - 1);
   }
 
